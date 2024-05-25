@@ -1,5 +1,9 @@
 const User = require('../Models/User'); // Make sure this path matches your structure
 const bcrypt = require('bcryptjs');
+const sendEmail = require('../utils/emailUtility');
+const randomstring = require('randomstring');
+
+
 
 exports.register = async (req, res) => {
   try {
@@ -53,3 +57,82 @@ console.log(user);
     res.status(500).send(error.message);
   }
 };
+//=============================================================
+  exports.reset_password_token = async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+  
+    if (!user) {
+      return res.status(404).json({message :'User not found'});
+    }
+  
+    const resetToken = randomstring.generate();
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 36000000; // 10minutes
+    await user.save();
+  
+    const resetUrl = `http://localhost:3000/reset_password_form/${resetToken}`;
+    const message = `Please use the following link to reset your password: ${resetUrl}`;
+  try{
+    await sendEmail(user.email, 'Password Reset', message);
+    res.json({message : 'Reset password link has been sent to your email.'});
+  }catch (error) {
+    res.status(500).send(error.message);}
+  };
+
+  exports.reset_password_form = async (req, res) => {
+    const { token } = req.params;
+    try {
+      console.log(req.params);
+      console.log(token);
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() }  // Check if the token has not expired
+        });
+
+        if (!user) {
+            return res.status(401).send('Password reset token is invalid or has expired.');
+        }
+
+        // Render a reset password form here or send a confirmation that the token is valid
+        res.json({message :'password to the password reset form : enter your new password.'});
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+exports.reset_password = async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body; // Ensure the new password is passed in the request body
+
+  try {
+      // Find the user with the matching reset password token and token expiration date
+      const user = await User.findOne({
+          resetPasswordToken: token,
+          resetPasswordExpires: { $gt: Date.now() }  
+      });
+
+      if (!user) {
+          return res.status(401).json({ message: "Password reset token is invalid or has expired." });
+      }
+
+      // Hash the new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+      // Update the user with the new hashed password and clear the reset token fields
+      user.passwordHash = hashedPassword;
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpires = undefined;
+
+      // Save the updated user information
+      await user.save();
+
+      // Send a success response
+      res.json({ message: "Your password has been updated successfully." });
+  } catch (error) {
+      res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};
+
+
