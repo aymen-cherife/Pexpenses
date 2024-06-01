@@ -1,7 +1,7 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { DefaultLayoutComponent } from './layout';
 import { authGuard } from './guards/auth.guard';  // Ensure the guard is properly imported
-
+import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
   {
@@ -19,7 +19,7 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes),
-        canActivate: [authGuard]  // Apply the auth guard here to protect the dashboard route
+        canActivate: [authGuard]
       },
       {
         path: 'theme',
@@ -88,11 +88,31 @@ export const routes: Routes = [
     }
   },
   {
+    path: 'reset_password',
+    loadComponent: () => import('./views/pages/password-reset/password-reset.component').then(m => m.PasswordResetComponent),
+    data: {
+      title: 'Reset Password'
+    }
+  },
+  {
+    path: 'set_new_password/:token',
+    loadComponent: () => import('./views/pages/set-new-password/set-new-password.component').then(m => m.SetNewPasswordComponent),
+    data: {
+      title: 'Set New Password'
+    }
+  },
+  {
     path: 'test',
     loadComponent: () => import('./views/pages/tests/httpClientTest.component').then(m => m.RegisterTestComponent),
     data: {
       title: 'Register Page'
     }
-  }
-  , { path: '**', redirectTo: 'dashboard' }
+  },
+  { path: '**', redirectTo: 'dashboard' }
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

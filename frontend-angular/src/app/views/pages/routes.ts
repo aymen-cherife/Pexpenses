@@ -1,4 +1,7 @@
-import { Routes } from '@angular/router';
+
+import { RouterModule, Routes } from '@angular/router';
+
+import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
   {
@@ -29,6 +32,20 @@ export const routes: Routes = [
       title: 'Register'
     }
   },
+  {
+    path: 'reset_password',
+    loadComponent: () => import('./password-reset/password-reset.component').then(m => m.PasswordResetComponent),
+    data: {
+      title: 'Reset Password'
+    }
+  },
+  {
+    path: 'set_new_password/:token',
+    loadComponent: () => import('./set-new-password/set-new-password.component').then(m => m.SetNewPasswordComponent),
+    data: {
+      title: 'Set New Password'
+    }
+  },
 
   {
     path: 'test',
@@ -39,3 +56,9 @@ export const routes: Routes = [
   }
 
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

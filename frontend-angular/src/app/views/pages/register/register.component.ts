@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';//added this line too for binding m
 import { HttpClientModule } from '@angular/common/http'; // Ensure this is imported
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-register',
   templateUrl: 'register.component.html',

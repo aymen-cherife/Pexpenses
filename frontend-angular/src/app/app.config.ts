@@ -12,6 +12,9 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 
 
+
+
+
 export const appConfig: ApplicationConfig = {
   providers: [
     {
@@ -37,5 +40,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(SidebarModule, DropdownModule),
     IconSetService,
     provideAnimations(),
-  ]
+  ],
+
 };

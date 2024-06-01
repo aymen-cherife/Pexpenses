@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const app = express();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
@@ -7,7 +8,7 @@ const xss = require('xss-clean');
 
 const authRoutes = require('./routes/authRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
-const app = express();
+
 app.use(express.json());
 
 // Middleware for parsing cookies

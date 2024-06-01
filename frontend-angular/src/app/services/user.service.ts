@@ -40,4 +40,11 @@ export class UserService {
     this.router.navigate(['/login']);  // Redirects the user to the login page
   }
 
+  resetPassword(email: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/reset_password`, { email });
+  }
+  setNewPassword(token: string, newPassword: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/reset_password/${token}`, { newPassword });
+  }
+
 }

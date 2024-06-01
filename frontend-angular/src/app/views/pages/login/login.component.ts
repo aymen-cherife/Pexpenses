@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [HttpClientModule, FormsModule, ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, NgStyle]
 })
+
 export class LoginComponent {
 
   constructor(private userService: UserService, private router: Router) { }

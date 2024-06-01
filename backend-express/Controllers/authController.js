@@ -59,6 +59,7 @@ console.log(user);
 };
 //=============================================================
   exports.reset_password_token = async (req, res) => {
+    console.log('Reset password token route hit');
     const { email } = req.body;
     const user = await User.findOne({ email });
   
@@ -71,7 +72,7 @@ console.log(user);
     user.resetPasswordExpires = Date.now() + 36000000; // 10minutes
     await user.save();
   
-    const resetUrl = `http://localhost:3000/reset_password_form/${resetToken}`;
+    const resetUrl = `http://localhost:4200/#/set_new_password/${resetToken}`;
     const message = `Please use the following link to reset your password: ${resetUrl}`;
   try{
     await sendEmail(user.email, 'Password Reset', message);
@@ -80,28 +81,9 @@ console.log(user);
     res.status(500).send(error.message);}
   };
 
-  exports.reset_password_form = async (req, res) => {
-    const { token } = req.params;
-    try {
-      console.log(req.params);
-      console.log(token);
-        const user = await User.findOne({
-            resetPasswordToken: token,
-            resetPasswordExpires: { $gt: Date.now() }  // Check if the token has not expired
-        });
-
-        if (!user) {
-            return res.status(401).send('Password reset token is invalid or has expired.');
-        }
-
-        // Render a reset password form here or send a confirmation that the token is valid
-        res.json({message :'password to the password reset form : enter your new password.'});
-    } catch (error) {
-        res.status(500).send('Internal Server Error');
-    }
-};
 
 exports.reset_password = async (req, res) => {
+  //console.log('Reset password with token route hit');
   const { token } = req.params;
   const { newPassword } = req.body; // Ensure the new password is passed in the request body
 
