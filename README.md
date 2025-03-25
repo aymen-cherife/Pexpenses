@@ -15,6 +15,10 @@ Pexpenses is a web application that helps users track and manage their personal 
 - JWT-based authentication
 - Session management
 - Email service for password recovery
+- CSRF protection using csurf with secure cookies and custom headers
+- XSS sanitization using xss-clean middleware
+- Cookie-based session handling with cookie-parser
+- CORS configured for Angular: allows cross-origin requests only from the frontend (localhost:4200) and supports credentialed sessions (cookies)
 
 ---
 
