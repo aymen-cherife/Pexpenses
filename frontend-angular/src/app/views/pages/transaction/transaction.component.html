@@ -1,0 +1,48 @@
+<!-- transaction.component.html -->
+<div class="crud-buttons">
+  <button class="btn btn-primary" (click)="deleteRow()">Delete Selected</button>
+  <input type="text" placeholder="Search..." (input)="onFilterTextBoxChanged($event)" class="form-control" />
+  <div class="date-amount-filters">
+    <input type="date" (change)="onDateRangeChanged($event, 'start')" placeholder="Start Date" class="form-control" />
+    <input type="date" (change)="onDateRangeChanged($event, 'end')" placeholder="End Date" class="form-control" />
+    <input type="number" (change)="onAmountRangeChanged($event, 'min')" placeholder="Min Amount" class="form-control" />
+    <input type="number" (change)="onAmountRangeChanged($event, 'max')" placeholder="Max Amount" class="form-control" />
+  </div>
+</div>
+
+<form (ngSubmit)="submitNewTransaction()" class="new-transaction-form">
+  <div class="form-row">
+    <div class="form-group col-md-2">
+      <label for="amount">Amount</label>
+      <input type="number" id="amount" [(ngModel)]="newTransaction.amount" name="amount" class="form-control" required />
+    </div>
+    <div class="form-group col-md-2">
+      <label for="date">Date</label>
+      <input type="date" id="date" [(ngModel)]="newTransaction.date" name="date" class="form-control" required />
+    </div>
+    <div class="form-group col-md-2">
+      <label for="category">Category</label>
+      <input type="text" id="category" [(ngModel)]="newTransaction.category" name="category" class="form-control" required />
+    </div>
+    <div class="form-group col-md-3">
+      <label for="description">Description</label>
+      <input type="text" id="description" [(ngModel)]="newTransaction.description" name="description" class="form-control" />
+    </div>
+    <div class="form-group col-md-3">
+      <label for="tags">Tags (comma-separated)</label>
+      <input type="text" id="tags" [(ngModel)]="newTransaction.tags" name="tags" class="form-control" />
+    </div>
+  </div>
+  <button type="submit" class="btn btn-success">Submit New Transaction</button>
+</form>
+
+<ag-grid-angular
+  #agGrid
+  style="width: 100%; height: 500px;"
+  class="ag-theme-alpine-dark"
+  [rowData]="filteredRowData"
+  [columnDefs]="columnDefs"
+  rowSelection="single"
+  (gridReady)="onGridReady($event)"
+  (cellValueChanged)="onCellValueChanged($event)">
+</ag-grid-angular>
